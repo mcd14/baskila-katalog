@@ -1,200 +1,382 @@
-// Ürün Verileri
-const products = [
+// --- Ana Sayfa Slider (Hero) İçerikleri ---
+const heroSlides = [
     {
-        id: 1,
-        name: "Figür Çakmak Kılıfları",
-        category: "Çakmak Kılıfları",
-        price: "₺45.00",
-        wholesaleNote: "Her 12 adet ve üzeri alımlarda dükkanlar için özel stant hediyelidir.",
-        description: "Canlı renkler, premium pürüzsüz yüzey ve kusursuz uyum. Çakmağınızı sımsıkı sarar, ergonomik tasarımıyla cebinize tam oturur.",
-        image:"images/cakmaklık gorsel.jpeg"
+        badge: "🔥 DEV KAMPANYA",
+        title: "2D ve 3D Anahtarlıklarda<br><span class='text-gradient'>%33 İndirim!</span>",
+        desc: "Toptan alımlarda geçerli dev indirim. Kasa yanınızın yeni parlayan yıldızı stoklarla sınırlı.",
+        btnText: "Fırsatı Yakala",
+        img: "images/anahtarlık.jpeg"
     },
     {
-        id: 2,
-        name: "Anahtarlık",
-        category: "Anahtarlıklar",
-        price: "₺35.00",
-        wholesaleNote: "50 ürün ve üzeri stant siparişlerinde kurumsal logo eklenebilir.",
-        description: "Kasa yanın yeni parlayan yıldızınız olacak",
-        image: "images/anahtarlık.jpeg"
-    },
-    {
-        id: 3,
-        name: "Mekanik Tuş Clickerlar",
-        category: "Clickerlar",
-        price: "₺60.00",
-        wholesaleNote: "10'lu ve 20'li toptan kutularda perakende noktaları için avantajlı fiyat.",
-        description: "Gerçek mekanik klavye switch'i kullanılarak üretilmiş, stres atmaya birebir fidget oyuncak. Harika tok bir ses çıkarır.",
-        image: "images/clicker.png"
-    }
-];
-
-// WhatsApp Numarası (Kendi numaranla değiştir - Başında 90 olacak)
-const PHONE_NUMBER = "905551911414";
-
-// Slider Mantığı
-// Slider Verileri (Artık her yazının bir arka plan görseli var)
-const slides = [
-    { 
-        title: "Yeni Sezon Çakmak Kılıfları", 
-        desc: "Toptan siparişlerde stant bedava!",
-        // Kendi görselini koyabilirsin: "images/slider-1.jpg"
-        img:  "images/cakmaklık gorsel.jpeg"
-    },
-    { 
-        title: "Stres Atıcı Clickerlar", 
-        desc: "Mekanik hissiyle bağımlılık yapar.",
-        // Kendi görselini koyabilirsin: "images/slider-2.jpg"
-        img: "images/clicker.png"
+        badge: "YENİ KOLEKSİYON",
+        title: "Araç İçi<br><span class='text-gradient'>Premium Aksesuarlar</span>",
+        desc: "Kişiye özel plaka ve iletişim numaratörleri ile aracınıza prestij katın.",
+        btnText: "Hemen İncele",
+        img: "images/cakmaklık gorsel.jpeg"
     }
 ];
 
 let currentSlide = 0;
 
-function updateSlider() {
-    const sliderContainer = document.querySelector('.slider-container');
-    const sliderContent = document.getElementById('sliderContent');
+function updateHeroSlider() {
+    const heroBg = document.getElementById('heroBg');
+    const heroContent = document.getElementById('heroContent');
+    const slide = heroSlides[currentSlide];
 
-    // Arka plan fotoğrafını ve üzerine okunabilirliği artıran hafif koyu filtreyi uygula
-    sliderContainer.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${slides[currentSlide].img}')`;
+    // Animasyonla çıkış
+    heroContent.classList.add('fade-out');
 
-    // İçeriği güncelle
-    sliderContent.innerHTML = `
-        <h2>${slides[currentSlide].title}</h2>
-        <p>${slides[currentSlide].desc}</p>
-    `;
-    
-    currentSlide = (currentSlide + 1) % slides.length;
+    setTimeout(() => {
+        heroBg.style.backgroundImage = `url('${slide.img}')`;
+        heroContent.innerHTML = `
+            <span class="hero-badge">${slide.badge}</span>
+            <h1>${slide.title}</h1>
+            <p>${slide.desc}</p>
+            <div class="hero-buttons">
+                <a href="#koleksiyon" class="btn-primary btn-lg">${slide.btnText}</a>
+            </div>
+        `;
+        // Animasyonla giriş
+        heroContent.classList.remove('fade-out');
+        
+        currentSlide = (currentSlide + 1) % heroSlides.length;
+    }, 500);
 }
 
-setInterval(updateSlider, 4000);
-updateSlider(); // İlk yüklemede çalıştır
+setInterval(updateHeroSlider, 5000);
 
-// Ürünleri Ekrana Çizme
+// --- Ürün Veritabanı ---
+const products = [
+    {
+        id: 1,
+        name: "Premium Figür Çakmak Kılıfı",
+        category: "Çakmak Kılıfları",
+        price: 100, minQty: 1, step: 1,
+        description: "Canlı renkler, premium pürüzsüz yüzey ve kusursuz uyum. Çakmağınızı sımsıkı sarar.",
+        image: "images/cakmaklık gorsel.jpeg",
+        gallery: ["images/cakmaklık gorsel.jpeg", "images/anahtarlık.jpeg"]
+    },
+    {
+        id: 2,
+        name: "2D Anahtarlık (20'li Toptan Paket)",
+        category: "Anahtarlıklar",
+        price: 300, oldPrice: 450, // %33 İndirim
+        minQty: 1, step: 1, 
+        description: "Toptan alımlar için ideal 20 adet 2D anahtarlık içeren avantajlı paket.",
+        image: "images/anahtarlık.jpeg",
+        gallery: ["images/anahtarlık.jpeg", "images/clicker.png"]
+    },
+    {
+        id: 3,
+        name: "3D Flexi Ürünler (20'li Toptan Paket)",
+        category: "Anahtarlıklar",
+        price: 500, oldPrice: 750, // %33 İndirim
+        minQty: 1, step: 1,
+        description: "Son dönemin en popüler 3D hareketli (flexi) oyuncakları ve anahtarlıkları.",
+        image: "images/anahtarlık.jpeg", 
+        gallery: ["images/anahtarlık.jpeg", "images/clicker.png"]
+    },
+    {
+        id: 4,
+        name: "Kişiye Özel Plaka Anahtarlık",
+        category: "Araç Aksesuarları",
+        price: 75, minQty: 1, step: 1,
+        description: "Aracınızın plakasına özel olarak birebir 3D baskı ile üretilen, asla silinmez premium anahtarlık.",
+        image: "images/clicker.png", 
+        gallery: ["images/clicker.png"]
+    },
+    {
+        id: 5,
+        name: "Araç İçi İletişim Numaratörü",
+        category: "Araç Aksesuarları",
+        price: 120, minQty: 1, step: 1,
+        description: "Otoparklarda aracınızı bırakırken numaranızı şık bir şekilde sergileyin.",
+        image: "images/cakmaklık gorsel.jpeg", 
+        gallery: ["images/cakmaklık gorsel.jpeg"]
+    },
+    {
+        id: 6,
+        name: "Premium Araç Logo Anahtarlık",
+        category: "Araç Aksesuarları",
+        price: 60, minQty: 1, step: 1,
+        description: "Aracınızın markasına özel tasarlanmış, kabartmalı lüks anahtarlık.",
+        image: "images/anahtarlık.jpeg", 
+        gallery: ["images/anahtarlık.jpeg"]
+    },
+    {
+        id: 7,
+        name: "Mekanik Switch Clicker",
+        category: "Clickerlar",
+        price: 60, minQty: 1, step: 1,
+        description: "Gerçek klavye switch'i kullanılarak üretilmiş, stres atmaya birebir fidget oyuncak.",
+        image: "images/clicker.png",
+        gallery: ["images/clicker.png"]
+    }
+];
+
+const PHONE_NUMBER = "905551911414";
+const FREE_SHIPPING_THRESHOLD = 1500; 
+
+function calculateDiscount(oldPrice, price) {
+    if (!oldPrice || oldPrice <= price) return null;
+    return Math.round(((oldPrice - price) / oldPrice) * 100);
+}
+
+// --- Sepet State Yönetimi ---
+let cart = JSON.parse(localStorage.getItem('baskila_cart')) || [];
+
+function updateCartCount() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    const badge = document.getElementById('cartCount');
+    badge.innerText = count;
+    badge.style.transform = 'translate(20%, -20%) scale(1.3)';
+    setTimeout(() => badge.style.transform = 'translate(20%, -20%) scale(1)', 200);
+}
+
+function saveCart() {
+    localStorage.setItem('baskila_cart', JSON.stringify(cart));
+    updateCartCount();
+    renderCartItems();
+}
+
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity += product.step;
+    } else {
+        cart.push({ ...product, quantity: product.minQty });
+    }
+    
+    saveCart();
+    showToast(`🛒 ${product.name} sepete eklendi!`);
+    closeDetailModal();
+}
+
+function updateQuantity(productId, changeMultiplier) {
+    const item = cart.find(i => i.id === productId);
+    if(item) {
+        item.quantity += (changeMultiplier * item.step);
+        if(item.quantity < item.minQty) {
+            cart = cart.filter(i => i.id !== productId);
+        }
+        saveCart();
+    }
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(i => i.id !== productId);
+    saveCart();
+}
+
+function toggleCart() {
+    document.getElementById('cartDrawer').classList.toggle('open');
+    document.getElementById('cartOverlay').classList.toggle('open');
+    renderCartItems();
+}
+
+function renderCartItems() {
+    const cartContainer = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const shippingFill = document.getElementById('shippingFill');
+    const shippingText = document.getElementById('shippingText');
+    
+    if (cart.length === 0) {
+        cartContainer.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: #64748b;">Sepetiniz şu an boş.</div>';
+        cartTotalEl.innerText = '₺0.00';
+        if(shippingFill) shippingFill.style.width = '0%';
+        if(shippingText) shippingText.innerHTML = `Kargo bedava için <strong>${FREE_SHIPPING_THRESHOLD}₺</strong> kaldı!`;
+        return;
+    }
+
+    let total = 0;
+    cartContainer.innerHTML = cart.map(item => {
+        total += item.price * item.quantity;
+        return `
+            <div class="cart-item">
+                <img src="${item.image}" class="cart-item-img" alt="${item.name}">
+                <div class="cart-item-info">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">₺${item.price}.00</div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span style="font-weight:700; width: 30px; text-align:center;">${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">Sil</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    cartTotalEl.innerText = `₺${total}.00`;
+
+    if(shippingFill && shippingText) {
+        let progressPercentage = (total / FREE_SHIPPING_THRESHOLD) * 100;
+        if (progressPercentage > 100) progressPercentage = 100;
+        shippingFill.style.width = progressPercentage + '%';
+
+        if (total >= FREE_SHIPPING_THRESHOLD) {
+            shippingText.innerHTML = "🎉 Tebrikler! Kargonuz <strong>BEDAVA</strong>.";
+            shippingFill.style.background = "#10b981"; 
+        } else {
+            shippingText.innerHTML = `Kargo bedava için <strong>₺${FREE_SHIPPING_THRESHOLD - total}</strong> kaldı!`;
+            shippingFill.style.background = "var(--accent-gradient)"; 
+        }
+    }
+}
+
+function openProductModal(productId) {
+    const product = products.find(p => p.id === productId);
+    if(!product) return;
+
+    document.getElementById('detailCategory').innerText = product.category;
+    document.getElementById('detailTitle').innerText = product.name;
+    document.getElementById('detailDesc').innerText = product.description;
+    document.getElementById('mainGalleryImg').src = product.gallery[0];
+    
+    const priceHtml = product.oldPrice 
+        ? `<span class="modal-old-price">₺${product.oldPrice}</span> ₺${product.price}.00`
+        : `₺${product.price}.00`;
+    document.getElementById('detailPrice').innerHTML = priceHtml;
+    
+    const warningEl = document.getElementById('detailWarning');
+    if(product.name.includes("Paket")) {
+        warningEl.style.display = 'block';
+        warningEl.innerText = `Bu ürün 20'li toptan paket olarak satılmaktadır.`;
+    } else {
+        warningEl.style.display = 'none';
+    }
+
+    const addBtn = document.getElementById('detailAddBtn');
+    addBtn.onclick = () => addToCart(product.id);
+
+    const thumbList = document.getElementById('thumbList');
+    thumbList.innerHTML = product.gallery.map((imgSrc, index) => `
+        <img src="${imgSrc}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${imgSrc}', this)">
+    `).join('');
+
+    document.getElementById('detailModal').classList.add('open');
+    document.getElementById('detailOverlay').classList.add('open');
+}
+
+function changeMainImage(src, element) {
+    document.getElementById('mainGalleryImg').src = src;
+    document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+    document.getElementById('detailOverlay').classList.remove('open');
+}
+
 function renderProducts() {
     const container = document.getElementById('productShowcase');
-    
-    // Kategorileri belirle (Set ile benzersiz olanları al)
     const categories = [...new Set(products.map(p => p.category))];
     
     let html = '';
     categories.forEach(category => {
         const catProducts = products.filter(p => p.category === category);
         
-        // CSS ID'si için Türkçe karakterleri temizle (örn: Çakmak Kılıfları -> cakmak-kiliflari)
-        const catId = category.toLowerCase().replace(/ /g, '-').replace(/ç/g, 'c').replace(/ı/g, 'i');
-        
         html += `
-            <section id="${catId}" class="category-section">
-                <h2 class="category-title">${category}</h2>
+            <section class="category-section">
+                <h2 class="category-title fade-up">${category}</h2>
                 <div class="grid">
-                    ${catProducts.map(product => `
-                        <div class="card">
-                            <img src="${product.image}" alt="${product.name}" class="card-img" loading="lazy">
+                    ${catProducts.map(product => {
+                        const discount = calculateDiscount(product.oldPrice, product.price);
+                        return `
+                        <div class="card fade-up">
+                            <div class="card-img-wrapper" onclick="openProductModal(${product.id})">
+                                ${discount ? `<div class="discount-badge">%${discount} İndirim</div>` : ''}
+                                <img src="${product.image}" alt="${product.name}" class="card-img" loading="lazy">
+                                <div class="card-overlay-btn">
+                                    <button class="btn-primary" style="width:100%" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                        Sepete Ekle
+                                    </button>
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <span class="card-tag">${product.category}</span>
                                 <h3 class="card-title">${product.name}</h3>
-                                <p class="card-desc">${product.description}</p>
-                                <div style="margin-top: auto;">
-                                    <button class="btn-secondary" onclick="openModal(${product.id})">Detayları İncele</button>
-                                    <a href="https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent('Merhaba, ' + product.name + ' ürünü için toptan/stant siparişi hakkında bilgi almak istiyorum.')}" target="_blank" class="btn-primary">Sipariş Ver</a>
+                                <div class="card-price">
+                                    ${product.oldPrice ? `<span class="old-price">₺${product.oldPrice}</span>` : ''}
+                                    ₺${product.price}
                                 </div>
+                                <button class="btn-secondary" onclick="openProductModal(${product.id})">Detayları İncele</button>
                             </div>
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
             </section>
         `;
     });
-    
     container.innerHTML = html;
 }
 
-// Modal (Detay Ekranı) İşlemleri
-const modal = document.getElementById('productModal');
-const modalBody = document.getElementById('modalBody');
-
-function openModal(productId) {
-    const product = products.find(p => p.id === productId);
-    if(!product) return;
-
-    const wpMessage = `Merhaba, ${product.name} ürünü için toptan/stant siparişi hakkında bilgi almak istiyorum.`;
+function checkoutWhatsApp() {
+    if (cart.length === 0) { showToast("Sepetiniz boş."); return; }
     
-    // Modelleri alt alta dizeceğimiz HTML'i hazırlayalım
-    let stackedImagesHTML = '';
+    let total = 0;
+    let text = "Merhaba, Baskıla 3D üzerinden sipariş vermek istiyorum:\n\n";
     
-    // Eğer ekstra model fotoğrafları varsa hepsini alt alta koy
-    if (product.models && product.models.length > 0) {
-        stackedImagesHTML = product.models.map(model => `
-            <div class="stacked-image-wrapper">
-                <img src="${model.img}" loading="lazy" alt="${model.name}" class="stacked-image">
-                <div class="model-title">${model.name}</div>
-            </div>
-        `).join('');
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        text += `▪ ${item.quantity}x ${item.name} (₺${itemTotal})\n`;
+    });
+    
+    if(total >= FREE_SHIPPING_THRESHOLD) {
+        text += `\n*Genel Toplam: ₺${total}.00 (Kargo Bedava)*\n\n`;
     } else {
-        // Ekstra model yoksa sadece ana resmi koy
-        stackedImagesHTML = `
-            <div class="stacked-image-wrapper">
-                <img src="${product.image}" alt="${product.name}" class="stacked-image">
-            </div>
-        `;
+        text += `\n*Ara Toplam: ₺${total}.00*\n(Kargo ücreti eklenecektir)\n\n`;
     }
+
+    text += `Ödeme ve teslimat adımları için bilgi alabilir miyim?`;
+    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function showToast(message) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast'; toast.innerHTML = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+}
+
+// --- Sıkça Sorulan Sorular (FAQ) Akordeon Mantığı ---
+function initFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
     
-    // modalBody içine "Kayan Alan" ve "Sabit Alan" olarak iki parça basıyoruz
-    modalBody.innerHTML = `
-        <!-- Kaydırılabilir İçerik Alanı -->
-        <div class="modal-scroll-area">
-            <span class="card-tag">${product.category}</span>
-            <h2 class="card-title" style="font-size: 24px; margin-bottom: 8px;">${product.name}</h2>
-            
-            <div class="wholesale-box">
-                <strong>Toptan Fırsatı</strong>
-                ${product.wholesaleNote}
-            </div>
-            
-            <p style="color: #57534e; line-height: 1.5; margin-bottom: 24px;">${product.description}</p>
-            
-            <h3 style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid #e7e5e4; padding-bottom: 8px;">Renk ve Modeller</h3>
-            
-            <!-- Resimler burada alt alta listelenecek -->
-            <div class="models-list">
-                ${stackedImagesHTML}
-            </div>
-        </div>
-
-        <!-- Sabit Sipariş Alanı (En altta yapışık kalır) -->
-        <div class="modal-footer-fixed">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 14px; color: #78716c;">Perakende Fiyatı:</span>
-                <span class="modal-price" style="margin: 0;">${product.price}</span>
-            </div>
-            
-            <a href="https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(wpMessage)}" target="_blank" class="btn-primary" style="padding: 16px; font-size: 16px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                WhatsApp'tan Sipariş Ver
-            </a>
-        </div>
-    `;
-
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('show'), 10);
-    document.body.style.overflow = 'hidden';
+    faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        questionBtn.addEventListener('click', () => {
+            // Önce diğer açık olanları kapatarak daha şık bir görünüm sağlar
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            // Tıklananı aç veya açıksa kapat
+            item.classList.toggle('active');
+        });
+    });
 }
 
-function closeModal() {
-    modal.classList.remove('show');
-    setTimeout(() => {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Scrollu geri aç
-    }, 300); // CSS transition süresi ile aynı
-}
-
-// Modalin dışına tıklayınca kapatma
-modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-        closeModal();
-    }
+// --- Sayfa Yüklendiğinde Her Şeyi Başlat ---
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.hero').classList.add('loaded');
+    updateHeroSlider(); // İlk slaytı başlat
+    renderProducts();
+    updateCartCount();
+    initScrollAnimations();
+    initFAQ(); // SSS bölümünü aktif et
 });
-
-// Sayfa yüklendiğinde ürünleri oluştur
-renderProducts();
